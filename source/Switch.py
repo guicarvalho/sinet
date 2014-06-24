@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 #-*- coding:utf8 -*-
 
-import thread
-import time
+from Validation import Validation
 
 class CAMTable(object):
 	'''Content Addressable Table'''
@@ -78,12 +77,27 @@ class Switch(object):
 			find = self.filtering(receiver, message) # pergunto se já conheço
 		except:
 			self.flooding(sender, message)
-			
-		# switch aprende as portas
-		self.learning(sender)
-		self.learning(receiver)
+		finally:
+			# switch aprende as portas
+			self.learning(sender)
+			self.learning(receiver)
 
 class SwitchBroadcast(Switch):
+
 	def send(self, sender, receiver, message):
-		self.flooding(receiver, message)
-		# print u'%s\nEsse Python é só na sacanagem!\n%s' % ('*'*30, '*'*30)
+		try:
+			validation = Validation()
+			broadcast = validation.decode(self.address, self.netmask)['broadcast']
+
+			# se o endereço for de broadcast da rede então a mensagem é disparada para todos
+			if receiver.address == broadcast:
+				self.flooding(sender, message)
+			else:
+				find = self.filtering(receiver, message) # pergunto se já conheço
+		except Exception, e:
+			print e
+			self.flooding(sender, message)
+		finally:
+			# switch aprende as portas
+			self.learning(sender)
+			self.learning(receiver)

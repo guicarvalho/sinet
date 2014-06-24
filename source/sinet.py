@@ -64,7 +64,19 @@ def criar_ambiente_sw():
 	switch.send(h3, h2, u'Alguns bits que estou mandando aqui de boas.')
 
 def criar_ambiente_sw_broadcast():
-	pass
+	h1 = Host('192.168.0.10', '255.255.255.0', '192.168.0.1', '1-1-1-1-1-1-1-1')
+	h2 = Host('192.168.0.11', '255.255.255.0', '192.168.0.1', '2-2-2-2-2-2-2-2')
+	h3 = Host('192.168.0.12', '255.255.255.0', '192.168.0.1', '3-3-3-3-3-3-3-3')
+	broadcast = Host('192.168.0.255', '255.255.255.0', '192.168.0.1', 'b-b-b-b-b-b-b-b')
+
+	switch = SwitchBroadcast(24, '192.168.0.5', '255.255.255.0', '192.168.0.1')
+	
+	switch.connect(h1)
+	switch.connect(h2)
+	switch.connect(h3)
+	switch.connect(broadcast)
+
+	switch.send(h1, broadcast, u'Alguns bits que estou mandando aqui de boas.')
 
 def criar_ambiente_roteador():
 	pass

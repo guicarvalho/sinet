@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 #-*- coding:utf8 -*-
 
-class Validation(object):
+class Validation():
 	'''
 	Classe de validação, contém os métodos para validar endereços IP e decodificar
 	endereço de rede e broadcast do IP fornecido.
 	'''
+
 	def decode(self, ip_address, netmask):
 		'''Retorna um dicionário com o endereço de rede e o de broadcast.'''
 		ip_address = ip_address.split('.')
@@ -15,10 +16,10 @@ class Validation(object):
 		rede = []
 
 		for i in range(len(ip_address)):
-			rede.append(int(ip_address[i]) & int(netmask[i]))
-			broadcast.append((~int(netmask[i])&0xff) | int(rede[i]))
+			rede.append(str(int(ip_address[i]) & int(netmask[i])))
+			broadcast.append(str((~int(netmask[i])&0xff) | int(rede[i])))
 
-		return {'rede': rede, 'broadcast': broadcast}
+		return {'rede': '.'.join(rede), 'broadcast': '.'.join(broadcast)}
 
 	def valid_ip(self, ip_address):
 		'''Vaerifica se o endereço IP passado é vádido'''
