@@ -6,7 +6,7 @@ class RouterTable(object):
 	def __init__(self):
 		self.table = []
 
-	def add(self, address, siwtch, interface):
+	def add(self, address, switch, interface):
 		'''Adiciona um registro de rota para a tabela de rotas.'''
 		self.table.append({'address': address, 'switch': switch, 'interface': interface})
 
@@ -19,6 +19,11 @@ class RouterTable(object):
 			if reg['address'] == address:
 				return (reg['switch'], reg['interface'])
 		return None
+
+	def show_all(self):
+		'''Exibe todas as rotas registradas na tabela'''
+		for line in self.table:
+			print line
 
 
 class Router(object):
@@ -36,16 +41,16 @@ class Router(object):
 		self.router_table.add(address, switch, interface)
 
 	def find_route(self, address):
-		try:
-			# procura na tabela de rotas se existe rota para aquele endereço
-			pos = hosts.index(host)
-			return hosts[pos]
-		except:
-			# caso não encontre retorna null
-			return None
+		for i in self.router_table.table:
+			if address == i['address']:
+				return True
+		return False
+
+	def print_routes(self):
+		self.router_table.show_all()
 
 	def send(self, sender, receiver, message):
-		if find_route(receiver.address):
+		if self.find_route(receiver.address):
 			receiver.ping(message)
 		else:
-			print 'Envia para o gateway pq eu não sei a rota'
+			print u'Não conheço a rota ... encaminhando para o gateway.'
