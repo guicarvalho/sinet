@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 #-*- coding:utf8 -*-
 
+import thread
+import time
+
 class CAMTable(object):
 	'''Content Addressable Table'''
 	def __init__(self):
@@ -8,16 +11,25 @@ class CAMTable(object):
 
 	def add(self, host, port):
 		'''guarda o endereço MAC e o tempo para expirar'''
-		self.table[host.mac] = [port, 10]
+		self.table[host.mac] = [port, 1]
 
 	def get_port(self, host):
 		'''Retorna o número da porta em que o host está conectado com o switch.'''
 		return self.table.get(host.mac)[0]
 
-	def show_all(self):
-		'''Exibe todas as entradas na CAM'''
-		for key in self.table.iterkeys():
-			print 'MAC=>%s - PORT=>%d' % (key, self.table[key][0])
+	def size(self):
+		return len(self.table)
+
+	# def decrement_time(self):
+	# 	table = self.table.copy()
+	# 	for key in table.iterkeys():
+	# 		list_values = self.table[key]
+
+	# 		if list_values[1] > 0:
+	# 			list_values[1] -= 1
+	# 			self.table[key] = list_values
+	# 		else:
+	# 			del self.table[key]
 
 class Switch(object):
 	def __init__(self, max_num_port, address, netmask, gateway):
@@ -26,6 +38,10 @@ class Switch(object):
 		self.address = address
 		self.netmask = netmask
 		self.gateway = gateway
+
+		self.create_CAM_table()
+
+	def create_CAM_table(self):
 		self.camtable = CAMTable()
 
 	def connect(self, host):
@@ -68,8 +84,6 @@ class Switch(object):
 		self.learning(receiver)
 
 class SwitchBroadcast(Switch):
-	def broadcast(self):
-		print 'NUM.PORT=> %d' % self.max_num_port
-		print 'ADDRESS IP=> %s' % self.address
-		print 'MASK=> %s' % self.netmask
-		print u'Esse Python é só na sacanagem!'
+	def send(self, sender, receiver, message):
+		self.flooding(receiver, message)
+		# print u'%s\nEsse Python é só na sacanagem!\n%s' % ('*'*30, '*'*30)
