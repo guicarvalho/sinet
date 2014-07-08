@@ -9,6 +9,6 @@ Comando:
 
 Para rodar o programa navegue até a pasta source, depois digite o seguinte comando:
 
-$ python exemplos.py
+$ python examples.py
 
 Um menu será mostrado com as opções dos ambientes disponíveis. Digite o número do ambiente desejado e pressione a tecla ENTER. Pronto seu ambiente foi carregado e a simulação foi feita, confira os resultados no seu terminal.
